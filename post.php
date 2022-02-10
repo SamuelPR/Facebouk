@@ -16,7 +16,7 @@
 <body>
     <?php require("navbar.inc.php") ?>
     <div class="container">
-        <form action="#" method="POST" enctype="multipart/form-data">
+        <form action="postProcess.php" method="POST" enctype="multipart/form-data">
             <div class="field">
                 <label class="label">Name</label>
                 <div class="control">
@@ -25,7 +25,7 @@
             </div>
             <div class="field">
             <div class="control">
-                <input type="file" class="button" name="fileToUpload[]" accept="image/jpeg,image/png,image/jpg" multiple="multiple">
+                <input type="file" class="button" name="files[]" accept="image/jpeg,image/png,image/jpg" multiple="multiple">
             </div>
             </div>
             <div class="field">

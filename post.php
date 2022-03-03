@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,22 +16,33 @@
 <body>
     <?php require("navbar.inc.php") ?>
     <div class="container">
+        <?php if ($_SESSION['err'] != "") {
+            echo "<div class='notification is-danger is-light'>";
+            echo $_SESSION['err'];
+            echo "</div>";
+        }
+        ?>
+
         <form action="postProcess.php" method="POST" enctype="multipart/form-data">
             <div class="field">
+
+
                 <label class="label">Name</label>
                 <div class="control">
-                    <input class="textarea is-primary" type="text" name="text" placeholder="What are you thinking about ?">
+                    <input class="textarea is-primary" type="text" name="text" placeholder="What are you thinking about ?" value=<?php echo $_SESSION['postText'] ?>>
                 </div>
             </div>
             <div class="field">
-            <div class="control">
-                <input type="file" class="button" name="files[]" accept="image/jpeg,image/png,image/jpg" multiple="multiple">
-            </div>
+                <div class="control">
+                    <input type="file" class="button" name="files[]" accept="image/jpeg,image/png,image/jpg" multiple="multiple">
+                </div>
             </div>
             <div class="field">
-            <div class="control">
-                <button type="submit" class="button is-primary is-block is-bold">Postez quelque chose!</button>
-            </div>
+
+                <div class="control">
+                    <button type="submit" class="button is-primary is-block is-bold">Postez quelque chose!</button>
+                </div>
+
             </div>
         </form>
     </div>

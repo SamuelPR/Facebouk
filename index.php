@@ -1,5 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php 
+session_start();
+$_SESSION['err'] = "";
+$_SESSION['postText'] = "";
+
+require './dbConnector/dbFunctions.php';
+
+$arrayOfPostIDs = [];
+$arrayOfPostIDs = getAllPosts();
+
+foreach ($arrayOfPostIDs as $id["idPost"] ) {
+ $arrayOfMedia_Post = getAllMediaFromPost($id);
+}
+
+
+?>
 
 <head>
   <meta charset="UTF-8">

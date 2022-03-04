@@ -55,20 +55,27 @@ for ($i = 0; $i < count($filesReceived["name"]); $i++) {
 
 if ($invalidePost == false) {
     if ($sizeTotal <= constant("MAX_SIZE_TOTAL")) {
+        //TODO: This part got heavily modified, comments need to be rewritten 
         //Initializing dir and dirFile variable, containing respectively the local directory and the directory + filename
         $dir;
         $dirFile;
         $dir = "./assets/img/";
-        insertPost($_POST['text'], date("Y-m-d H:i:s"));
-        $idLastPost = selectLastId();
         foreach ($imgToSave as $img) {
             //Each image is verified and if no copy of it already exist in local directory, we then proceed to move then there
             $dirFile = $dir . $img["name"];
             if (file_exists($dirFile)) {
-            } else {
+                $img["name"] = uniqid() . uniqid() . uniqid() . "." . $img["type"];
+            }
+        }
+        if (insertMedia($dir, $imgToSave, date("Y-m-d H:i:s"), $_POST['text'])) {
+            foreach ($imgToSave as $img) {
+                $dirFile = $dir . $img["name"];
                 move_uploaded_file($img['tmp_name'], $dirFile);
             }
-            insertMedia($dirFile, date("Y-m-d H:i:s"), $img['type'], $idLastPost[0]["LAST_INSERT_ID()"]);
+        } else {
+            $errors['msg'] = "Une erreur est survenue, veuillez recommencer votre post";
+            $invalidePost = true;
+            header('location: post.php');
         }
         //Heading back to home page
         header('Location: index.php');

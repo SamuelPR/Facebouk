@@ -1,6 +1,6 @@
 <?php
-
-require 'configuration.inc.php';
+//TODO: Comment here too(I'm sensing a TODO pattern..)
+require './dbConnector/configuration.inc.php';
 
 class DatabaseConnection
 {

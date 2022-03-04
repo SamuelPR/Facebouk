@@ -1,17 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php 
+<?php
+//TODO: It's late but i need to comment this as soon as possible
 session_start();
 $_SESSION['err'] = "";
 $_SESSION['postText'] = "";
 
 require './dbConnector/dbFunctions.php';
 
+$listPosts = "";
 $arrayOfPostIDs = [];
 $arrayOfPostIDs = getAllPosts();
+$postArray = [];
+$postMediaLink;
 
-foreach ($arrayOfPostIDs as $id["idPost"] ) {
- $arrayOfMedia_Post = getAllMediaFromPost($id);
+foreach ($arrayOfPostIDs as $post) {
+  $arrayOfMedia_Post = getAllMediaFromPost($post["idPost"]);
+  $postMediaLink->postInfo = $post;
+  $postMediaLink->images = $arrayOfMedia_Post;
+  array_push($postArray, clone $postMediaLink);
+}
+
+foreach ($postArray as $post) {
+  $text = $post->postInfo["postText"];
+  $tempPost = "<article class='message'> <div class='message-header'> </div><div class='message-body'>" . $text . "</div>";
+
+  foreach ($post->images as $image) {
+    $tempPost .= "<div class='message-body'><img src='" . $image["nameMedia"] . "'></div>";
+  }
+  $tempPost .= "</article>";
+  $listPosts = $tempPost . $listPosts;
 }
 
 
@@ -37,6 +55,7 @@ foreach ($arrayOfPostIDs as $id["idPost"] ) {
             <figure class="image"><img src="assets/wallpaperPic.jpg" alt="Image"></figure>
           </div>
           <div class="card-content">
+
             <div class="media">
               <div class="media-left">
                 <figure class="image is-48x48"><img src="assets/profilePic.jpg" alt="Image"></figure>

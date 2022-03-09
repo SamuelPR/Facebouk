@@ -67,7 +67,7 @@ if ($invalidePost == false) {
                 $img["name"] = uniqid() . uniqid() . uniqid() . "." . $img["type"];
             }
         }
-        if (insertMedia($dir, $imgToSave, date("Y-m-d H:i:s"), $_POST['text'])) {
+        if (insertNewPost($dir, $imgToSave, date("Y-m-d H:i:s"), $_POST['text'])) {
             foreach ($imgToSave as $img) {
                 $dirFile = $dir . $img["name"];
                 move_uploaded_file($img['tmp_name'], $dirFile);

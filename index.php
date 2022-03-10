@@ -1,49 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
 <?php
 //TODO: It's late but i need to comment this as soon as possible
+//Starting the session
 session_start();
-$_SESSION['err'] = "";
-$_SESSION['postText'] = "";
 
 require './dbConnector/dbFunctions.php';
 
-$listPosts = "";
-$arrayOfPostIDs = [];
-$arrayOfPostIDs = getAllPosts();
+//Reseting every stored value
+$_SESSION['err'] = "";
+$_SESSION['postText'] = "";
+
+
+$listPosts = ""; //This will contain the list of posts to display
+//This will contain all the infos of posts in DB
+$arrayOfPostInfos = [];
+$arrayOfPostInfos = getAllPosts();
+
 $postArray = [];
 $postMediaLink;
 
-foreach ($arrayOfPostIDs as $post) {
+//Foreach post in the array:
+foreach ($arrayOfPostInfos as $post) {
+  //We get all the medias linked to the IdPost
   $arrayOfMedia_Post = getAllMediaFromPost($post["idPost"]);
+//We then temporarly store it in postMediaLink to link the infos to the different medias
   $postMediaLink->postInfo = $post;
-  $postMediaLink->images = $arrayOfMedia_Post;
+  $postMediaLink->medias = $arrayOfMedia_Post;
+
+  //We then push a clone of the temporary array the postArray
+  //The postMediaLink instance is stored in postArray but if we later modify the postMediaLink in the foreach, array_push will modify every instance of postMediaLink in postArray
+  //This will cause all values in postArray to be equal to the last stored values in postMediaLink
+  //by using 'clone' we instead create and store a clone of postMediaLink, that will not be modified on the next loop
   array_push($postArray, clone $postMediaLink);
 }
 
-foreach ($postArray as $post) {
+foreach ($postArray as $post) {//Now we loop in every post stored in postArray
   $text = $post->postInfo["postText"];
+  //Creating and storing the base html with the post's text
   $tempPost = "<article class='message'> <div class='message-header'> </div><div class='message-body'>" . $text . "</div>";
 
-  foreach ($post->medias as $media) {
-    
-    if($media['typeMedia'] == "image"){
-     $tempPost .= "<div class='message-body'><img width='15%' height='15%' src='" . $media["nameMedia"] . "'></div>";
+  foreach ($post->medias as $media) {//Foreach media in each post
+
+    //We check the type of the media, and add the according html element for the media to be displayed in
+    if ($media['typeMedia'] == "image") {
+      $tempPost .= "<div class='message-body'><img width='15%' height='15%' src='" . $media["nameMedia"] . "'></div>";
     }
-    if($media['typeMedia'] == "video"){
-     $tempPost .= "<div class='message-body'><video width='15%' height='15%' autoplay loop muted><source src='". $media["nameMedia"] . "'></video></div>";
+    if ($media['typeMedia'] == "video") {
+      //The autoplay and loop will make the video run indefinitely
+      $tempPost .= "<div class='message-body'><video width='15%' height='15%' autoplay loop muted><source src='" . $media["nameMedia"] . "'></video></div>";
     }
-    if($media['typeMedia'] == "audio"){ 
-     $tempPost .= "<div class='message-body'><audio controls><source src='" . $media['nameMedia'] . "'></audio> </div>";
+    if ($media['typeMedia'] == "audio") {
+      $tempPost .= "<div class='message-body'><audio controls><source src='" . $media['nameMedia'] . "'></audio> </div>";
     }
-   
   }
+  //closing the post's html
   $tempPost .= "</article>";
-  $listPosts = $tempPost . $listPosts;
+  $listPosts = $tempPost . $listPosts;//We finally add the string containing the html elements to listPosts and loop
 }
 
 
 ?>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
@@ -91,15 +108,7 @@ foreach ($postArray as $post) {
           <h2>Bienvenue</h2>
         </div>
       </article>
-      <?php echo $listPosts ?>
-      <!--  <article class="message">
-        <div class="message-header">
-          <p>Bienvenue</p>
-        </div>
-        <div class="message-body">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. <strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec nulla. Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur. Aenean ac <em>eleifend lacus</em>, in mollis lectus. Donec sodales, arcu et sollicitudin porttitor, tortor urna tempor ligula, id porttitor mi magna a neque. Donec dui urna, vehicula et sem eget, facilisis sodales sem.
-        </div>
-      </article> -->
+      <?php echo $listPosts //We simply echo listPosts to display everything?>
 
     </div>
 

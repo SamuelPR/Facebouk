@@ -25,8 +25,18 @@ foreach ($postArray as $post) {
   $text = $post->postInfo["postText"];
   $tempPost = "<article class='message'> <div class='message-header'> </div><div class='message-body'>" . $text . "</div>";
 
-  foreach ($post->images as $image) {
-    $tempPost .= "<div class='message-body'><img src='" . $image["nameMedia"] . "'></div>";
+  foreach ($post->medias as $media) {
+    
+    if($media['typeMedia'] == "image"){
+     $tempPost .= "<div class='message-body'><img width='15%' height='15%' src='" . $media["nameMedia"] . "'></div>";
+    }
+    if($media['typeMedia'] == "video"){
+     $tempPost .= "<div class='message-body'><video width='15%' height='15%' autoplay loop muted><source src='". $media["nameMedia"] . "'></video></div>";
+    }
+    if($media['typeMedia'] == "audio"){ 
+     $tempPost .= "<div class='message-body'><audio controls><source src='" . $media['nameMedia'] . "'></audio> </div>";
+    }
+   
   }
   $tempPost .= "</article>";
   $listPosts = $tempPost . $listPosts;

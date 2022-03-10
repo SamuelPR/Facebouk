@@ -29,12 +29,12 @@ for ($i = 0; $i < count($filesReceived["name"]); $i++) {
 
     //If will check if the image is below max size and if it's one of the accepted types
     if ($imgSize <= constant("MAX_SIZE_SINGLE") && $filesReceived["error"][$i] == 0) {
-        if (strtolower($imgType[1]) == "jpg" || strtolower($imgType[1]) == "png" || strtolower($imgType[1] == "jpeg")) {
+        if (strtolower($imgType[0]) == "image" || strtolower($imgType[0]) == "video" || strtolower($imgType[0] == "audio")) {//TODO comment new additions of audio and video
             $tmpImg = [
                 //Added 2 uniqid to reduce the chances of the images already existing in the DB and temporary local dir
                 "name" => uniqid() . uniqid() . $filesReceived["name"][$i],
                 "tmp_name" => $filesReceived['tmp_name'][$i],
-                "type" => $imgType[1],
+                "type" => $imgType[0],
                 "size" => $imgSize
             ];
             //Adding image size to total size for later verification

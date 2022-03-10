@@ -34,7 +34,7 @@ session_start();
             </div>
             <div class="field">
                 <div class="control">
-                    <input type="file" class="button" name="files[]" accept="image/jpeg,image/png,image/jpg" multiple="multiple">
+                    <input type="file" class="button" name="files[]" accept="image/*,video/*,audio/*" multiple="multiple">
                 </div>
             </div>
             <div class="field">

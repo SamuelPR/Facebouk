@@ -22,7 +22,7 @@ $postMediaLink;
 foreach ($arrayOfPostInfos as $post) {
   //We get all the medias linked to the IdPost
   $arrayOfMedia_Post = getAllMediaFromPost($post["idPost"]);
-//We then temporarly store it in postMediaLink to link the infos to the different medias
+  //We then temporarly store it in postMediaLink to link the infos to the different medias
   $postMediaLink->postInfo = $post;
   $postMediaLink->medias = $arrayOfMedia_Post;
 
@@ -33,12 +33,12 @@ foreach ($arrayOfPostInfos as $post) {
   array_push($postArray, clone $postMediaLink);
 }
 
-foreach ($postArray as $post) {//Now we loop in every post stored in postArray
+foreach ($postArray as $post) { //Now we loop in every post stored in postArray
   $text = $post->postInfo["postText"];
   //Creating and storing the base html with the post's text
   $tempPost = "<article class='message'> <div class='message-header'> </div><div class='message-body'>" . $text . "</div>";
 
-  foreach ($post->medias as $media) {//Foreach media in each post
+  foreach ($post->medias as $media) { //Foreach media in each post
 
     //We check the type of the media, and add the according html element for the media to be displayed in
     if ($media['typeMedia'] == "image") {
@@ -53,8 +53,9 @@ foreach ($postArray as $post) {//Now we loop in every post stored in postArray
     }
   }
   //closing the post's html
-  $tempPost .= "</article>";
-  $listPosts = $tempPost . $listPosts;//We finally add the string containing the html elements to listPosts and loop
+  $tempPost .= "<div class='compose has-text-right'><button id='" .  $post->postInfo['idPost'] . "' class='button is-bold is-danger js-modal-trigger' data-target='modal-delete'>Supprimer</button>";
+  $tempPost .= "<a class='button is-bold is-info'>Modifier</a></div></article>";
+  $listPosts = $tempPost . $listPosts; //We finally add the string containing the html elements to listPosts and loop
 }
 
 
@@ -108,10 +109,23 @@ foreach ($postArray as $post) {//Now we loop in every post stored in postArray
           <h2>Bienvenue</h2>
         </div>
       </article>
-      <?php echo $listPosts //We simply echo listPosts to display everything?>
+      <?php echo $listPosts //We simply echo listPosts to display everything
+      ?>
 
     </div>
 
+  </div>
+  <!-- Modal-->
+  <div id="modal-delete" class="modal">
+    <div class="modal-background"></div>
+
+    <div class="modal-content">
+      <div class="box">
+        <p>Souhaitez-vous supprimer ce post?</p>
+        <!-- Your content -->
+        <button class='button is-bold is-danger' onclick="postDelete()">Confirmer</button>
+      </div>
+    </div>
   </div>
 
 </body>

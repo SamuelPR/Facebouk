@@ -50,6 +50,50 @@ function insertNewPost($dir, $imgArray, $modified, $text)
         exit();
     }
 }
+
+
+function deletePost($id){
+    try {
+        //Instanciation of the DatabaseConnection and the beginning of transactions
+        $req = DatabaseConnection::getInstance();
+        $req->beginTransaction();
+
+        //First, we insert a new post in the DB
+        $req = DatabaseConnection::getInstance()->prepare('INSERT INTO post(postText,creationdate,modificationDate) VALUES(:postText,:creationdate,:modificationDate)');
+        $req->execute(array(
+            'postText' => $text,
+            'creationdate' => date("Y-m-d H:i:s"),
+            'modificationDate' => $modified
+        ));
+        //With the new post inserted we can now get the last insertedID, which we will use to link media to it
+        $tempID = DatabaseConnection::getInstance()->lastInsertId();
+
+        //Then foreach image in the array, we insert it and link it to $tempID, effectivily linking it to the post
+        foreach ($imgArray as $img) {
+            $req = DatabaseConnection::getInstance()->prepare('INSERT INTO media(nameMedia,typeMedia,creationdate,modificationDate, idPost) VALUES(:nameMedia,:typeMedia,:creationdate,:modificationDate,:idPost)');
+            $req->execute(array(
+                'nameMedia' => $dir . $img['name'],
+                'creationdate' => date("Y-m-d H:i:s"),
+                'modificationDate' => $modified,
+                'typeMedia' => $img['type'],
+                'idPost' => $tempID
+            ));
+        }
+
+        //If nothing breaks until here, then we finally commit it, making the changes to the DB
+        DatabaseConnection::getInstance()->commit();
+        return true;
+    } catch (Exception $e) {
+        //If something broke along the way, then we rollback everything and cancel the last transactions
+        DatabaseConnection::getInstance()->rollBack();
+        return false;
+        exit();
+    }
+}
+
+
+
+
 /**
  * Will get a media by it's name
  * 

@@ -8,6 +8,8 @@ require './dbConnector/dbFunctions.php';
 //Reseting every stored value
 $_SESSION['err'] = "";
 $_SESSION['postText'] = "";
+$_SESSION['postDelete'] = null;
+$postToDelete = null;
 
 
 $listPosts = ""; //This will contain the list of posts to display
@@ -53,11 +55,10 @@ foreach ($postArray as $post) { //Now we loop in every post stored in postArray
     }
   }
   //closing the post's html
-  $tempPost .= "<div class='compose has-text-right'><button id='" .  $post->postInfo['idPost'] . "' class='button is-bold is-danger js-modal-trigger' data-target='modal-delete'>Supprimer</button>";
+  $tempPost .= "<div class='compose has-text-right'><button onclick=\"postToDelete(".$post->postInfo['idPost'].")\" id='" .  $post->postInfo['idPost'] . "' class='button test is-bold is-danger'>Supprimer</button>";
   $tempPost .= "<a class='button is-bold is-info'>Modifier</a></div></article>";
   $listPosts = $tempPost . $listPosts; //We finally add the string containing the html elements to listPosts and loop
 }
-
 
 ?>
 <!DOCTYPE html>
@@ -115,20 +116,9 @@ foreach ($postArray as $post) { //Now we loop in every post stored in postArray
     </div>
 
   </div>
-  <!-- Modal-->
-  <div id="modal-delete" class="modal">
-    <div class="modal-background"></div>
-
-    <div class="modal-content">
-      <div class="box">
-        <p>Souhaitez-vous supprimer ce post?</p>
-        <!-- Your content -->
-        <button class='button is-bold is-danger' onclick="postDelete()">Confirmer</button>
-      </div>
-    </div>
-  </div>
 
 </body>
 <script src="assets/js/index.js"></script>
+<script src="assets/js/delete.js"></script>
 
 </html>

@@ -64,8 +64,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function postDelete(){
-        
-    }
-
+    
 });

@@ -5,9 +5,6 @@ $_SESSION['postText'] = "";
 
 require './dbConnector/dbFunctions.php';
 
-//? Error message for later use, to indiquate if user missed an obligatory step
-
-// TODO Filter for security
 $sizeTotal = 0; //The total size of all the files in MB
 $filesReceived = $_FILES["files"]; //List of all the medias received
 $mediaToSave = []; //medias that will be transfered to local files and DB
@@ -29,7 +26,7 @@ for ($i = 0; $i < count($filesReceived["name"]); $i++) {
 
     //If will check if the media is below max size and if it's one of the accepted types
     if ($mediaSize <= constant("MAX_SIZE_SINGLE") && $filesReceived["error"][$i] == 0) {
-        if (strtolower($mediaType[0]) == "image" || strtolower($mediaType[0]) == "video" || strtolower($mediaType[0] == "audio")) { //TODO comment new additions of audio and video
+        if (strtolower($mediaType[0]) == "image" || strtolower($mediaType[0]) == "video" || strtolower($mediaType[0] == "audio")) { 
             $tmpMedia = [
                 //Added 2 uniqid to reduce the chances of the media already existing in the DB and temporary local dir
                 "name" => uniqid() . uniqid() . $filesReceived["name"][$i],
@@ -55,7 +52,6 @@ for ($i = 0; $i < count($filesReceived["name"]); $i++) {
 
 if ($invalidePost == false) {
     if ($sizeTotal <= constant("MAX_SIZE_TOTAL")) {
-        //TODO: This part got heavily modified, comments need to be rewritten 
         //Initializing dir and dirFile variable, containing respectively the local directory and the directory + filename
         $dir;
         $dirFile;

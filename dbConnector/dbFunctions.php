@@ -52,32 +52,47 @@ function insertNewPost($dir, $imgArray, $modified, $text)
 }
 
 
-function deletePost($id){
+function deletePost($id)
+{
     try {
         //Instanciation of the DatabaseConnection and the beginning of transactions
         $req = DatabaseConnection::getInstance();
         $req->beginTransaction();
 
-        //First, we insert a new post in the DB
-        $req = DatabaseConnection::getInstance()->prepare('INSERT INTO post(postText,creationdate,modificationDate) VALUES(:postText,:creationdate,:modificationDate)');
-        $req->execute(array(
-            'postText' => $text,
-            'creationdate' => date("Y-m-d H:i:s"),
-            'modificationDate' => $modified
-        ));
-        //With the new post inserted we can now get the last insertedID, which we will use to link media to it
-        $tempID = DatabaseConnection::getInstance()->lastInsertId();
+        $req = DatabaseConnection::getInstance()->prepare("DELETE FROM media WHERE idPost in ($id)");
+        $req->execute();
 
-        //Then foreach image in the array, we insert it and link it to $tempID, effectivily linking it to the post
-        foreach ($imgArray as $img) {
-            $req = DatabaseConnection::getInstance()->prepare('INSERT INTO media(nameMedia,typeMedia,creationdate,modificationDate, idPost) VALUES(:nameMedia,:typeMedia,:creationdate,:modificationDate,:idPost)');
-            $req->execute(array(
-                'nameMedia' => $dir . $img['name'],
-                'creationdate' => date("Y-m-d H:i:s"),
-                'modificationDate' => $modified,
-                'typeMedia' => $img['type'],
-                'idPost' => $tempID
-            ));
+        $req = DatabaseConnection::getInstance()->prepare("DELETE FROM post WHERE idPost in ($id)");
+        $req->execute();
+
+        //If nothing breaks until here, then we finally commit it, making the changes to the DB
+        DatabaseConnection::getInstance()->commit();
+        return true;
+    } catch (Exception $e) {
+        //If something broke along the way, then we rollback everything and cancel the last transactions
+        DatabaseConnection::getInstance()->rollBack();
+        return false;
+        exit();
+    }
+}
+
+function updatePost($mediaInfo, $text, $id)
+{
+    try {
+        //Instanciation of the DatabaseConnection and the beginning of transactions
+        $req = DatabaseConnection::getInstance();
+        $req->beginTransaction();
+
+        $newDate = date("Y-m-d H:i:s");
+        $req = DatabaseConnection::getInstance()->prepare("UPDATE post SET postText = ('$text'), modificationDate = ('$newDate') WHERE idPost = ('$id')");
+        $req->execute();
+
+        if ($mediaInfo != []) {
+            foreach ($mediaInfo as $media) {
+                $idMedia = $media[0]['idMedia'];
+                $req = DatabaseConnection::getInstance()->prepare("DELETE FROM media WHERE idMedia = ($idMedia)");
+                $req->execute();
+            }
         }
 
         //If nothing breaks until here, then we finally commit it, making the changes to the DB
@@ -91,9 +106,6 @@ function deletePost($id){
     }
 }
 
-
-
-
 /**
  * Will get a media by it's name
  * 
@@ -105,6 +117,14 @@ function getMediaByName($name)
     $req->execute();
     return $req->fetchAll(PDO::FETCH_ASSOC);
 }
+
+function getMediaById($id)
+{
+    $req = DatabaseConnection::getInstance()->query("SELECT * FROM media where idMedia in ('$id')");
+    $req->execute();
+    return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
 /**
  * Will simply return all post on DB
@@ -124,6 +144,13 @@ function getAllPosts()
 function getAllMediaFromPost($idPost)
 {
     $req = DatabaseConnection::getInstance()->query("SELECT * FROM media WHERE idPost = $idPost");
+    $req->execute();
+    return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getPostFromId($idPost)
+{
+    $req = DatabaseConnection::getInstance()->query("SELECT * FROM post WHERE idPost = $idPost");
     $req->execute();
     return $req->fetchAll(PDO::FETCH_ASSOC);
 }

@@ -1,5 +1,4 @@
 <?php
-//TODO: It's late but i need to comment this as soon as possible
 //Starting the session
 session_start();
 
@@ -56,7 +55,7 @@ foreach ($postArray as $post) { //Now we loop in every post stored in postArray
   }
   //closing the post's html
   $tempPost .= "<div class='compose has-text-right'><button onclick=\"postToDelete(".$post->postInfo['idPost'].")\" id='" .  $post->postInfo['idPost'] . "' class='button test is-bold is-danger'>Supprimer</button>";
-  $tempPost .= "<a class='button is-bold is-info'>Modifier</a></div></article>";
+  $tempPost .= "<form action='post.php' method='POST'><div class='compose has-text-right'><button type='submit' name='postId' value='". $post->postInfo['idPost'] ."' class='button test is-bold is-info'>Modifier</button></form></div></article>";
   $listPosts = $tempPost . $listPosts; //We finally add the string containing the html elements to listPosts and loop
 }
 
@@ -105,6 +104,12 @@ foreach ($postArray as $post) { //Now we loop in every post stored in postArray
       </div>
     </aside>
     <div id="post-feed" class="column is-10">
+      <?php 
+      if($_SESSION['deleteError'] == true){
+       echo "<div class='notification is-danger is-light'>Une erreur la Suppréssion est survenue. </div>";
+       $_SESSION['deleteError'] = false;
+      }
+      ?>
       <article class="message is-large">
         <div class="message-body">
           <h2>Bienvenue</h2>

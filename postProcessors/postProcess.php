@@ -3,7 +3,9 @@ session_start();
 $_SESSION['err'] = "";
 $_SESSION['postText'] = "";
 
-require './dbConnector/dbFunctions.php';
+require_once('../dbConnector/configuration.inc.php');
+require_once('../dbConnector/databaseConnection.class.php');
+require_once('../dbConnector/dbFunctions.php');
 
 $sizeTotal = 0; //The total size of all the files in MB
 $filesReceived = $_FILES["files"]; //List of all the medias received
@@ -55,7 +57,7 @@ if ($invalidePost == false) {
         //Initializing dir and dirFile variable, containing respectively the local directory and the directory + filename
         $dir;
         $dirFile;
-        $dir = "./assets/media/";
+        $dir = "../assets/img";
         foreach ($mediaToSave as $media) {
             //Each media is verified and if no copy of it already exist in local directory, we then proceed to move then there
             $dirFile = $dir . $media["name"];
@@ -86,9 +88,10 @@ if ($invalidePost == false) {
         }
         //If everythings goes right, we try to insert the post in the DB
         if ($mediaCHeck == true) {
+            $dir = "assets/img";
             if (insertNewPost($dir, $mediaToSave, date("Y-m-d H:i:s"), $_POST['text'])) {
                 //Heading back to home page
-                header('Location: index.php');
+                header('Location: ../index.php');
             } else {
                 //in case the insert failes, we delete every file locally
                 foreach ($tmpMediaSave as $file) {

@@ -3,7 +3,9 @@ session_start();
 $_SESSION['err'] = "";
 $_SESSION['postText'] = "";
 
-require './dbConnector/dbFunctions.php';
+require_once('./dbConnector/configuration.inc.php');
+require_once('./dbConnector/databaseConnection.class.php');
+require_once('./dbConnector/dbFunctions.php');
 
 $mediaInfo = [];
 

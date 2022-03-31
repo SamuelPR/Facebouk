@@ -1,6 +1,8 @@
 <?php
 session_start();
-require_once('./dbConnector/dbFunctions.php');
+require_once('../dbConnector/configuration.inc.php');
+require_once('../dbConnector/databaseConnection.class.php');
+require_once('../dbConnector/dbFunctions.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,7 +17,7 @@ require_once('./dbConnector/dbFunctions.php');
 </head>
 
 <body>
-    <?php require("navbar.inc.php") ?>
+    <?php require("../navbar.inc.php") ?>
     <div class="container">
         <?php
         if ($_SESSION['err'] != "") {
@@ -35,14 +37,14 @@ require_once('./dbConnector/dbFunctions.php');
         }
         ?>
         <?php if($_SERVER['REQUEST_METHOD'] == "POST"){
-            echo "<form action='modifyProcess.php' method='POST' enctype='multipart/form-data'>";
+            echo "<form action='../modifyProcess.php' method='POST' enctype='multipart/form-data'>";
         }else{
-            echo "<form action='postProcess.php' method='POST' enctype='multipart/form-data'>";
+            echo "<form action='./postProcess.php' method='POST' enctype='multipart/form-data'>";
         }
         
         
         ?>
-        <form action="postProcess.php" method="POST" enctype="multipart/form-data">
+        
             <div class="field">
 
 
@@ -59,13 +61,13 @@ require_once('./dbConnector/dbFunctions.php');
                     $checkbox = "<input type=\"checkbox\" id=\"" . $media['nameMedia'] . "\" name=\"mediaToChange[]\" value=\"" . $media['idMedia'] . "\">";
                     switch ($media['typeMedia']) {
                         case "image":
-                            $checkbox .= " <img class=\"p-1\" src=\"" . $media['nameMedia'] . "\" width=\"15%\" height=\"15%\">";
+                            $checkbox .= " <img class=\"p-1\" src=\"../" . $media['nameMedia'] . "\" width=\"15%\" height=\"15%\">";
                             break;
                         case "video":
-                            $checkbox .= "<video width=\"15%\" height=\"15%\" autoplay loop muted><source src=\"" . $media["nameMedia"] . "\" type=\"" . $media["nameMedia"] . "\"></video>";
+                            $checkbox .= "<video width=\"15%\" height=\"15%\" autoplay loop muted><source src=\"../" . $media["nameMedia"] . "\" type=\"" . $media["nameMedia"] . "\"></video>";
                             break;
                         case "audio":
-                            $checkbox .= " <audio class=\"p-1\" controls><source src=\"" . $media['nameMedia'] . "\" type=\"" . $media["nameMedia"] . "\"></audio>";
+                            $checkbox .= " <audio class=\"p-1\" controls><source src=\"../" . $media['nameMedia'] . "\" type=\"" . $media["nameMedia"] . "\"></audio>";
                             break;
                     }
                     echo $checkbox;
@@ -84,6 +86,6 @@ require_once('./dbConnector/dbFunctions.php');
         </form>
     </div>
 </body>
-<script src="assets/js/index.js"></script>
+<script src="../assets/js/index.js"></script>
 
 </html>

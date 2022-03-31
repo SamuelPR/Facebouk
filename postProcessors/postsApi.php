@@ -1,6 +1,8 @@
 <?php
 session_start();
-require_once('./dbConnector/dbFunctions.php');
+require_once('../dbConnector/configuration.inc.php');
+require_once('../dbConnector/databaseConnection.class.php');
+require_once('../dbConnector/dbFunctions.php');
 switch($_SERVER['REQUEST_METHOD']){
     case "DELETE":
         $idPost = filter_input(INPUT_GET, 'idPost');

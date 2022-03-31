@@ -6,7 +6,7 @@ function postToDelete(idPost) {
             redirect: 'follow'
         };
 
-        fetch(`http://localhost/Facebouk/postsApi.php?idPost=${idPost}`, requestOptions)
+        fetch(`http://localhost/Facebouk/postProcessors/postsApi.php?idPost=${idPost}`, requestOptions)
             .then(response => response.text())
             .then(result => {
                 location.reload();

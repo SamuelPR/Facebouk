@@ -1,5 +1,4 @@
 <?php
-require './dbConnector/configuration.inc.php';
 
 class DatabaseConnection
 {

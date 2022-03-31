@@ -2,7 +2,9 @@
 //Starting the session
 session_start();
 
-require './dbConnector/dbFunctions.php';
+require_once('./dbConnector/configuration.inc.php');
+require_once('./dbConnector/databaseConnection.class.php');
+require_once('./dbConnector/dbFunctions.php');
 
 //Reseting every stored value
 $_SESSION['err'] = "";
@@ -55,7 +57,7 @@ foreach ($postArray as $post) { //Now we loop in every post stored in postArray
   }
   //closing the post's html
   $tempPost .= "<div class='compose has-text-right'><button onclick=\"postToDelete(".$post->postInfo['idPost'].")\" id='" .  $post->postInfo['idPost'] . "' class='button test is-bold is-danger'>Supprimer</button>";
-  $tempPost .= "<form action='post.php' method='POST'><div class='compose has-text-right'><button type='submit' name='postId' value='". $post->postInfo['idPost'] ."' class='button test is-bold is-info'>Modifier</button></form></div></article>";
+  $tempPost .= "<form action='postProcessors/post.php' method='POST'><div class='compose has-text-right'><button type='submit' name='postId' value='". $post->postInfo['idPost'] ."' class='button test is-bold is-info'>Modifier</button></form></div></article>";
   $listPosts = $tempPost . $listPosts; //We finally add the string containing the html elements to listPosts and loop
 }
 

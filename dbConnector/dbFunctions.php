@@ -1,5 +1,4 @@
 <?php
-require './dbConnector/databaseConnection.class.php';
 
 /**
  * Will insert a new post and media to DB

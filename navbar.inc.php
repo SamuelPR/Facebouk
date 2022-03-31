@@ -20,7 +20,7 @@
                 <a class="navbar-item is-active is-size-5 has-text-weight-semibold" href="index.php">
                     Home
                 </a>
-                <a class="navbar-item is-size-5 has-text-weight-semibold" href="post.php">
+                <a class="navbar-item is-size-5 has-text-weight-semibold" href="postProcessors/post.php">
                     Post
                 </a>
             </div>
